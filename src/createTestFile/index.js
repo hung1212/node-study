@@ -2,6 +2,15 @@ let path = require('path')
 
 module.exports = class CreateTestFile {
 
+    getTestSourcs(methodName, classFile, isClass = false) {
+        return `test(Test ${methodName}, ()=> {
+            const ${isClass} ? { ${methodName} } : ${methodName} = require('../${classFile}')
+            const ret = ${methodName}()
+            // expect(ret)
+            //    .tobe(test return)
+        })`
+    }
+
     /**
      * 生成测试文件名
      * @param {*} fileName 代码文件名
