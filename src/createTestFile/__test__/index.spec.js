@@ -1,16 +1,26 @@
 
-test('测试测试代码生成',()=> {
-    let file = new (require('../index'))()
-    let res = file.getTestSourcs('fun', 'class')
-    console.log(res)
-    expect(res)
-        .toBe(`test(Test fun, ()=> {
-            const false ? { fun } : fun = require('../class')
-            const ret = fun()
-            // expect(ret)
-            //    .tobe(test return)
-        })`)
+const fs = require('fs')
+test('测试测试代码文件生成', ()=> {
+    fs.rmdirSync(__dirname + '/data/__test__', {
+        recursive: true
+    })
+
+    const src = new (require('../index.js'))()
+    src.genJestSource(__dirname + '/data')
 })
+
+// test('测试测试代码生成',()=> {
+//     let file = new (require('../index'))()
+//     let res = file.getTestSourcs('fun', 'class')
+//     console.log(res)
+//     expect(res)
+//         .toBe(`test(Test fun, ()=> {
+//             const false ? { fun } : fun = require('../class')
+//             const ret = fun()
+//             // expect(ret)
+//             //    .tobe(test return)
+//         })`)
+// })
 
 
 // test('测试生成文件名', ()=> {
