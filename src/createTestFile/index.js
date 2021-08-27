@@ -32,16 +32,17 @@ module.exports = class CreateTestFile {
         let mod = require(sourcePath)
         let source
         if(typeof mod === 'object') {
-           source =  Object.keys(mod).map(v=> this.getTestSourcs(v, path.basename(sourcePath)), true).join('\n')
+           source =  Object.keys(mod).map(v=> this.getTestSourcs(v, path.basename(sourcePath), true)).join('\n')
         } else if(typeof mod === 'function') {
-           source =  this.getTestSourcs(mod, path.basename(sourcePath))
+           let basename = path.basename(sourcePath)
+           source =  this.getTestSourcs(basename.replace('.js', ''), path.basename(sourcePath))
         }
         fs.writeFileSync(testPath, source)
     }
 
     getTestSourcs(methodName, classFile, isClass = false) {
-        return `test(Test ${methodName}, ()=> {
-            const ${isClass} ? { ${methodName} } : ${methodName} = require('../${classFile}')
+        return `test('Test ${methodName}', ()=> {
+            const ${isClass ? '{' + methodName + '}'  : methodName}  = require('../${classFile}')
             const ret = ${methodName}()
             // expect(ret)
             //    .tobe(test return)
@@ -65,5 +66,3 @@ module.exports = class CreateTestFile {
         })
     }
 }
-
-console.log(__dirname)

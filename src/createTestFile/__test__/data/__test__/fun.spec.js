@@ -1,6 +1,6 @@
-test(Test () => 'fun return', ()=> {
-            const false ? { () => 'fun return' } : () => 'fun return' = require('../fun.js')
-            const ret = () => 'fun return'()
+test('Test fun', ()=> {
+            const fun  = require('../fun.js')
+            const ret = fun()
             // expect(ret)
             //    .tobe(test return)
         })

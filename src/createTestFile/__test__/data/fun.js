@@ -1,1 +1,1 @@
-module.exports = ()=> 'fun return'
+module.exports = fun = () => 'fun return'
