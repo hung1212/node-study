@@ -1,5 +1,8 @@
 {
     "scripts": {
         "test": "jest"
+    },
+    "dependencies": {
+        "koa": "^2.13.1"
     }
 }
