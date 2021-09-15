@@ -3,19 +3,22 @@ const context = require('./context')
 const response = require('./response')
 const request = require('./request')
 class KKB {
+    constructor() {
+        this.middlewares = []
+    }
     listen(...arg) {
-        const serve = http.createServer((req, res)=> {
+        const serve = http.createServer( async (req, res)=> {
             // this.callBack(req, res)
             let ctx = createContext(req, res)
-
-            this.callBack(ctx)
-            console.log(ctx.body)
+            
+            let fn = compose(this.middlewares)
+            await fn(ctx)
             res.end(ctx.body)
         })
         serve.listen(...arg)
     }
-    use(callBack) {
-        this.callBack = callBack
+    use(middleware) {
+        this.middlewares.push(middleware)
     }
 }
 
@@ -28,6 +31,21 @@ function createContext(req, res) {
     ctx.res = ctx.response.res = res
 
     return ctx
+}
+
+function compose(middlewares) {
+    return function(ctx) {
+        return dispatch(0)
+        function dispatch(i) {
+            let fn = middlewares[i]
+            if(!fn) return Promise.resolve()
+            return Promise.resolve(
+                fn(ctx, function next() {
+                    return dispatch(i + 1)
+                })
+            )
+        }
+    }
 }
 
 module.exports = KKB
