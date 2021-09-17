@@ -2,6 +2,7 @@ const http = require('http')
 const context = require('./context')
 const response = require('./response')
 const request = require('./request')
+const { version } = require('os')
 class KKB {
     constructor() {
         this.middlewares = []
@@ -12,12 +13,14 @@ class KKB {
             let ctx = createContext(req, res)
             
             let fn = compose(this.middlewares)
+            console.log(fn(ctx))
             await fn(ctx)
             res.end(ctx.body)
         })
         serve.listen(...arg)
     }
     use(middleware) {
+        console.log(middleware)
         this.middlewares.push(middleware)
     }
 }

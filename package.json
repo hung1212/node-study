@@ -3,6 +3,7 @@
         "test": "jest"
     },
     "dependencies": {
-        "koa": "^2.13.1"
+        "koa": "^2.13.1",
+        "koa-router": "^10.1.1"
     }
 }
