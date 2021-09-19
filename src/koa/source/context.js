@@ -3,7 +3,7 @@ module.exports = {
         return this.response.body
     },
     set body(val) {
-        this.response._body = val
+        this.response.body = val
     },
     get url() {
         return this.request.url
