@@ -6,7 +6,31 @@
     <title>Document</title>
 </head>
 <body>
-    status node
+    <div>
+        status node
+    </div>
     <img src="./index.png" alt="" srcset="">
 </body>
 </html>
+
+<!-- <script>
+    function callback({name}) {
+        console.log(name)
+        alert(name)
+    }
+    let script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src = `http://localhost:4000/api/users?callback=callback`
+
+    document.querySelector('head').appendChild(script)
+</script> -->
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    (async () => {
+        axios.defaults.baseURL = 'http://localhost:4000'
+        const res = await axios.get("/api/users")
+        console.log('data',res.data)
+        document.writeln(`Response : ${JSON.stringify(res.data)}`)
+    })()
+</script>
