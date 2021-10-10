@@ -2,12 +2,15 @@ const http = require('http')
 const fs = require('fs')
 http.createServer((request, respose)=> {
     const { url, method, headers }= request
-    console.log(url)
     console.log(method)
+    console.log(url)
+    respose.setHeader("Content-Type", 'application/json')
+    respose.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+    respose.setHeader('Set-Cookie', 'Cookiel=val123')
+    respose.setHeader('Access-control-Allow-Credentials', true)
     if(url === '/' && method === 'GET') {
         respose.setHeader("Content-Type", 'text/html')
-        fs.readFile('./index.html', (err, data)=> {
-            console.log(err)
+        fs.readFile(`${__dirname}/index.html`, (err, data)=> {
             if(err) {
                 respose.writeHead(500 , {
                     "Content-Type": 'text/plain;charset=utf-8'
@@ -17,7 +20,7 @@ http.createServer((request, respose)=> {
             }
             respose.end(data)
         })
-    } else if(url === '/api/users' && method === 'OPTIONS') {
+    } else if(method === 'OPTIONS') {
         respose.writeHead(200, {
             'Access-Control-Allow-Origin': 'http://localhost:3000',
             'Access-Control-Allow-Headers': 'X-token, Content-Type',
@@ -25,10 +28,6 @@ http.createServer((request, respose)=> {
         })
         respose.end()
     } else if((url === '/api/users') && ( method === 'GET' || method === 'POST' )) {
-        respose.setHeader("Content-Type", 'application/json')
-        respose.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
-        respose.setHeader('Set-Cookie', 'Cookiel=val123')
-        respose.setHeader('Access-control-Allow-Credentials', true)
         respose.end(JSON.stringify({
             name: '李四'
         }))
@@ -43,6 +42,21 @@ http.createServer((request, respose)=> {
             let stream = fs.createReadStream('.' + url)
             stream.pipe(respose)
         }
+    } else if(method === 'POST' && url === '/api/save') {
+        let reqData = [];
+        let size = 0;
+        request.on('data', data => {
+            console.log('>>>req on', data);
+            reqData.push(data);
+            size += data.length;
+        });
+        request.on('end', function () {
+            console.log('end')
+            const data = Buffer.concat(reqData, size);
+            console.log(data);
+            console.log('data:', size, data.toString())
+            respose.end(`formdata:${data.toString()}`)
+        });
     } else {
         respose.writeHead( 404, {
             "Content-Type": 'text/plain;charset=utf-8'
